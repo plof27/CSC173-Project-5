@@ -98,6 +98,66 @@ static Circuit* Circuits_a() {
 	return new_Circuit(3, inputs, 1, outputs, 4, gates);
 }
 
+static Circuit* Circuits_b() {
+	//init input values
+	Value *in0 = new_Value(false);
+	Value *in1 = new_Value(false);
+	Value *in2 = new_Value(false);
+	//init gates
+	Gate *not0 = new_Inverter(in1);
+	Gate *and0 = new_AndGate(in0, Gate_getOutput(not0));
+	Gate *not1 = new_Inverter(Gate_getOutput(and0));
+	Gate *and1 = new_AndGate(in1, in2);
+	Gate *not2 = new_Inverter(Gate_getOutput(and1));
+	Gate *or0 = new_OrGate(Gate_getOutput(and0), Gate_getOutput(and1));
+	Gate *not3 = new_Inverter(Gate_getOutput(or0));
+
+	//create arrays
+	Value **inputs = new_Value_array(3);
+	inputs[0] = in0;
+	inputs[1] = in1;
+	inputs[2] = in2;
+	Value **outputs = new_Value_array(1);
+	outputs[0] = Gate_getOutput(not3);
+	Gate **gates = new_Gate_array(7);
+	gates[0] = not0;
+	gates[1] = and0;
+	gates[2] = and1;
+	gates[3] = or0;
+	gates[4] = not1;
+	gates[5] = not2;
+	gates[6] = not3;
+
+	return new_Circuit(3, inputs, 1, outputs, 7, gates);
+}
+
+static Circuit* Circuits_c() {
+	//init input values
+	Value *in0 = new_Value(false);
+	Value *in1 = new_Value(false);
+	//init gates
+	Gate *not0 = new_Inverter(in0);
+	Gate *not1 = new_Inverter(in1);
+	Gate *and0 = new_AndGate(in1, in0);
+	Gate *and1 = new_AndGate(Gate_getOutput(not0), Gate_getOutput(not1));
+	Gate *or0 = new_OrGate(Gate_getOutput(and0), Gate_getOutput(and1));
+
+	//create arrays
+	Value **inputs = new_Value_array(2);
+	inputs[0] = in0;
+	inputs[1] = in1;
+	Value **outputs = new_Value_array(1);
+	outputs[0] = Gate_getOutput(or0);
+	Gate **gates = new_Gate_array(5);
+	gates[0] = not0;
+	gates[1] = not1;
+	gates[2] = and0;
+	gates[3] = and1;
+	gates[4] = or0;
+
+	return new_Circuit(3, inputs, 1, outputs, 5, gates);
+}
+
 int main(int argc, char **argv) {
 	Circuit* c = Circuits_and3();
 	printf("Some input(s) false: should be false\n");
